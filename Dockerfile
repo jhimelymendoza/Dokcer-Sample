@@ -1,14 +1,11 @@
-FROM node:6-alpine
-EXPOSE  3000 
-RUN apk add --update tini
-RUN mkdir -p /usr/src/app
+FROM node:8.9-alpine
+ENV NODE_ENV production
 WORKDIR /usr/src/app
-COPY package.json /usr/src/app/
-COPY package*.json ./
-RUN npm install && npm cache clean
-COPY ./ ./
-CMD [ "node","--","node","./bin/wwww" ]
-
+COPY ["package.json", "package-lock.json*", "./"]
+RUN npm install --production --silent && mv node_modules ../
+COPY . .
+EXPOSE 3000
+CMD npm start
 
 #FROM node:10
 #WORKDIR /usr/src/app
